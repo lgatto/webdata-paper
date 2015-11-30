@@ -1,0 +1,54 @@
+---
+title: R Packages to Aid in Handling Web Access Logs
+author:
+  - name: Oliver Keyes
+    affiliation: Wikimedia Foundation
+    address:
+    - line 1
+    - line 2
+    email:  author1@work
+  - name: Bob Rudis
+    affiliation: Rapid7
+    address:
+    - line 1
+    - line 2
+    email:  author2@work
+abstract: >
+  Web access logs contain information on HTTP(S) requests and form a key part of both industry and academic explorations
+  of human behaviour on the internet - explorations commonly performed in R. In this paper we explain and demonstrate
+  a series of packages - **webreadr**, **urltools**, **iptools** and **rgeolocate** - designed to efficiently read in, parse
+  and munge access log data, allowing researchers to handle it easily.
+preamble: >
+output: rticles::rjournal_article
+---
+
+## Introduction
+
+Introductory section which may include references in parentheses
+\citep{R}, or cite a reference such as \citet{R} in the text.
+
+## Reading access logs
+
+This section may contain a figure such as Figure \ref{figure:rlogo}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics{Rlogo}
+  \caption{The logo of R.}
+  \label{figure:rlogo}
+\end{figure}
+
+## Decoding and parsing URLs
+
+There will likely be several sections, perhaps including code snippets, such as:
+
+```{r}
+x <- 1:10
+x
+```
+
+## Summary
+
+This file is only a basic article template. For full details of _The R Journal_ style and information on how to prepare your article for submission, see the [Instructions for Authors](http://journal.r-project.org/latex/RJauthorguide.pdf).
+
+\bibliography{RJreferences}

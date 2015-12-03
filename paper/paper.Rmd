@@ -21,7 +21,6 @@ abstract: >
 preamble: >
 output: rticles::rjournal_article
 ---
-
 ## Introduction
 
 The rise of the World Wide Web over the last few decades has made it dramatically easier to access and transfer data, and R \citep{RCore} boasts abundant functionality when it comes to taking data *from* the web. Base R itself has simple file downloading and page reading capabilities, through the `download.file` and `readLines` functions, and additional functionality is made available for handling web-accessible data through packages such as **httr** \citep{httr}.
@@ -56,16 +55,15 @@ With four log types, we have three different timestamp formats - and that's only
 
 To make reading access logs into R as easy as possible we created the **webreadr** package. This contains user-friendly equivalents to `read.table` for each type of log, detecting the fields that should appear, converting the timestamps into POSIX objects, and merging fields or splitting fields where necessary. The package contains four core functions, one for each form of log: `read_clf` for the Common Log Format, `read_combined` for the Combined Log Format, and `read_squid` and `read_aws` for Squid and AWS formats respectively. Each one abstracts away the complexity of specifying column names and formats, and instead allows a researcher to read a file in with a minimal amount of work.
 
-As the name suggests, it is built not on top of base R but on top of the **readr** \citep{readr} package, allowing us to take advantage of substantial speed improvements that package's base functions have over base R. These improvements can be seen in the visualisation below, which uses **microbenchmark** \citep{microbenchmark} to compare 100 reads of a 600,000-line "squid" formatted file with webreadr to the same operation performed in base R:
+As the name suggests, it is built not on top of base R but on top of the **readr** \citep{readr} package, allowing us to take advantage of substantial speed improvements that package's base functions have over base R. These improvements can be seen in the visualisation below, which uses **microbenchmark** \citep{microbenchmark} to compare 100 reads of a 600,000-line "squid" formatted file with webreadr to the same operation performed in base R: 
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics{Rlogo}
-  \caption{The logo of R.}
-  \label{figure:rlogo}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{reading_benchmarks}
+    \caption{Results of microbenchmark run: read\char`_squid versus base-R equivalent code}
 \end{figure}
-
-**webreadr** 
+  
+**webreadr** takes 1.2 seconds to read this file in at a minimum, and 1.48 at maximum, with a median of 1.33. This is consistently 3.5-6 times faster than the equivalent base R functionality - and is also, as explained, far easier to use.
 
 ## Decoding and parsing URLs
 
@@ -86,7 +84,11 @@ The solution is to be able to consistently decode URLs, which makes URL-based da
 To solve this common problem in analysing request logs, the **urltools** [@urltools] package was created. This contains a function,
 <code>url_decode</code>, which decodes URLs - but relies on vectorised, compiled code. Benchmarking the two approaches against each other shows that the `urltools` implementation is approximately 60-70 times faster over large datasets. Again using **microbenchmark**, if we compare the vectorised decoding of 1,000,000 URLs with `urltools` against `URLdecode` in a `vapply` loop, we see a 60-70 times speed improvement of urltools over base R:
 
-
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{decoding_benchmarks}
+    \caption{Results of microbenchmark run: url\char`_decode versus base-R equivalent code}
+\end{figure}
 
 ## Summary
 

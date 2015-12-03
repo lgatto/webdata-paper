@@ -28,7 +28,7 @@ levels(reading_benchmarks$expr)[grepl(x = levels(reading_benchmarks$expr), patte
 levels(reading_benchmarks$expr)[levels(reading_benchmarks$expr) != "webreadr"] <- "base R"
 
 # Plot
-ggsave(file = "reading_benchmarks.png",
+ggsave(file = "./paper/reading_benchmarks.png",
        autoplot(reading_benchmarks) + theme_fivethirtynine(base_size = 14)  + theme_fivethirtynine(base_size = 14) + 
          scale_y_continuous(expand=c(0,0)) + 
          labs(y = "Time [seconds]", title = "Reading 600k lines of access log, base R versus webreadr"))

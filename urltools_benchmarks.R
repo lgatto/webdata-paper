@@ -27,7 +27,7 @@ levels(decoding_benchmarks$expr)[grepl(x = levels(decoding_benchmarks$expr), pat
 levels(decoding_benchmarks$expr)[levels(decoding_benchmarks$expr) != "urltools"] <- "base R"
 
 # Plot
-ggsave(file = "decoding_benchmarks.png",
+ggsave(file = "./paper/decoding_benchmarks.png",
        plot = autoplot(decoding_benchmarks) + theme_fivethirtynine(base_size = 14) +
          labs(title = "Decoding 1m URLs, base R versus urltools (log-scaled)"))
 
@@ -47,7 +47,7 @@ levels(parsing_benchmarks$expr)[grepl(x = levels(parsing_benchmarks$expr), patte
 levels(parsing_benchmarks$expr)[levels(parsing_benchmarks$expr) != "urltools"] <- "httr"
 
 # Plot
-ggsave(file = "parsing_benchmarks.png",
+ggsave(file = "./paper/parsing_benchmarks.png",
        plot = autoplot(parsing_benchmarks) + theme_fivethirtynine(base_size = 14) +
          labs(title = "Parsing 1m URLs, httr versus urltools (log-scaled)"))
 

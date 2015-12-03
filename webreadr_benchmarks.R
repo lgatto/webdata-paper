@@ -23,5 +23,16 @@ r_base_read_squid <- function(filename){
 reading_benchmarks <- microbenchmark({(webreadr_read_squid("expanded_squid_log.squid"))},
                                      {(r_base_read_squid("expanded_squid_log.squid"))})
 
+# Relevel
+levels(reading_benchmarks$expr)[grepl(x = levels(reading_benchmarks$expr), pattern = "webreadr")] <- "webreadr"
+levels(reading_benchmarks$expr)[levels(reading_benchmarks$expr) != "webreadr"] <- "base R"
+
+# Plot
+ggsave(file = "reading_benchmarks.png",
+       autoplot(reading_benchmarks) + theme_fivethirtynine(base_size = 14)  + theme_fivethirtynine(base_size = 14) + 
+         scale_y_continuous(expand=c(0,0)) + 
+         labs(y = "Time [seconds]", title = "Reading 600k lines of access log, base R versus webreadr"))
+
 # Save benchmarks
 save(reading_benchmarks, file = "webreadr_benchmarks.RData")
+

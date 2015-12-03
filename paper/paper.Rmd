@@ -24,12 +24,39 @@ output: rticles::rjournal_article
 
 ## Introduction
 
-Introductory section which may include references in parentheses
-\citep{R}, or cite a reference such as \citet{R} in the text.
+The rise of the World Wide Web over the last few decades has made it dramatically easier to access and transfer data, and R \citep{RCore} boasts abundant functionality when it comes to taking data *from* the web. Base R itself has simple file downloading and page reading capabilities, through the `download.file` and `readLines` functions, and additional functionality is made available for handling web-accessible data through packages such as **httr** \citep{httr}.
+
+Data *on* the web is not, however, the only kind of web data that interests researchers; web traffic is, in and of itself, an interesting data source. Access logs - records of connections between users and a web server - are an asset and resource for people studying everything from user behaviour on the internet \citep{halfak}, to website performance \citep{performance}, to information security \citep{infosec}.
+
+As a statistically-oriented programming language, R is commonly used by these same researchers for data analysis, testing and reporting - but it lacks tools designed for the kinds of data sources and formats that are encountered when dealing with access logs. In this article we review the use cases for particular operations over web data, the limitations in base R when it comes to performing those operations, and a suite of R packages designed to overcome them: **webreadr** \citep{webreadr}, designed for reading access logs in,
+**urltools** \citep{urltools}, for URL manipulation, **iptools** \citep{rgeolocate} for handling IP addresses, and **rgeolocate** \citep{rgeolocate} for direct IP geolocation.
 
 ## Reading access logs
 
-This section may contain a figure such as Figure \ref{figure:rlogo}.
+The first task with any data analysis is to read the data into R so that it can be manipulated. With access logs this is slightly complicated by the fact that there is no one standard for what a log should look like; instead, there are multiple competing approaches from different software platforms and eras. These include the Common Log Format (CLF), the confusingly-named Combined Log Format, and formats used by individual, commonly-used software platforms - such as the custom format for the Squid internet caching software, and the format used by Amazon Web Services (AWS).
+
+The difference between formats can easily be shown by looking at how timestamps are represented:
+
+\begin{table}[ht]
+\centering
+\caption{Timestamps in Common Access Log Formats}
+\begin{tabular}{rlr}
+  \hline
+Log Type & Timestamp Columns & Timestamp Format \\ 
+  \hline
+Common Log Format & 1 & 10/Oct/2000:13:55:36 -0700\\ 
+Combined Log Format & 1 & 26/Apr/2000:00:23:48 -0400\\ 
+Squid & 1 & 1286536309.450\\ 
+AWS & 2 & 2014-05-23	01:13:11\\ 
+   \hline
+\end{tabular}
+\end{table}
+
+With four log types, we have three different timestamp formats - and that's only one of the many columns that could appear. These logs also vary in whether they specify quoting fields (or sanitising unquoted ones), the columns they contain and the data each column contains in turn.
+
+To make reading access logs into R as easy as possible we created the **webreadr** package. This contains user-friendly equivalents to `read.table` for each type of log, detecting the fields that should appear, converting the timestamps into POSIX objects, and merging fields or splitting fields where necessary. The package contains four core functions, one for each form of log: `read_clf` for the Common Log Format, `read_combined` for the Combined Log Format, and `read_squid` and `read_aws` for Squid and AWS formats respectively. Each one abstracts away the complexity of specifying column names and formats, and instead allows a researcher to read a file in with a minimal amount of work.
+
+As the name suggests, it is built not on top of base R but on top of the **readr** \citep{readr} package, allowing us to take advantage of substantial speed improvements that package's base functions have over base R. These improvements can be seen in the visualisation below, which uses **microbenchmark** \citep{microbenchmark} to compare 100 reads of a 600,000-line "squid" formatted file with webreadr to the same operation performed in base R:
 
 \begin{figure}[htbp]
   \centering
@@ -38,14 +65,28 @@ This section may contain a figure such as Figure \ref{figure:rlogo}.
   \label{figure:rlogo}
 \end{figure}
 
+**webreadr** 
+
 ## Decoding and parsing URLs
 
-There will likely be several sections, perhaps including code snippets, such as:
+Within access logs, URLs appear - both to describe the web asset or page that the user requested and where the user came from. These fields are usually named <code>url</code> and <code>referer</code> respectively.
 
-```{r}
-x <- 1:10
-x
-```
+### Decoding
+Both values can be percent-encoded, allowing them toinclude characters that are valid but reserved by the URL specification as having special meanings ("reserved characters"). A `#` symbol, for example, is encoded as <code>%23</code>: a percentage symbol, followed by the byte-code for that character.
+
+The encoding of reserved characters is useful, since it means that URL paths and queries can contain a vast array of values - but it makes data analysis tougher to do. Examples of common data analysis or cleaning operations that become more difficult are:
+
+1. **Aggregation**. Aggregating URLs together is useful to identify, for example, the relative usage and popularity of particular pages
+in your data - but it becomes tougher if encoding is inconsistent, because two URLs could hold the same value but *look* very different.
+2. **Value selection**. With text-based data, regular expressions are a common way of filtering or selecting entries that meet particular conditions, but things become fuzzy when you have to look not just for particular characters (a space, say) but also the encoded values (<code>%20</code>).
+3. **Exploratory data analysis** (EDA). EDA is a common initial step to investigate a data set, examining the variables and values it contains and whether they meet a researcher's expectations - but on a practical basis it becomes difficult when the values aren't human-readable.
+
+The solution is to be able to consistently decode URLs, which makes URL-based data far easier to analyse. Base R does contain a function, <code>URLdecode</code>, for doing just that, but is neither vectorised nor based on compiled code; with large datasets it takes an extremely long time.
+
+To solve this common problem in analysing request logs, the **urltools** [@urltools] package was created. This contains a function,
+<code>url_decode</code>, which decodes URLs - but relies on vectorised, compiled code. Benchmarking the two approaches against each other shows that the `urltools` implementation is approximately 60-70 times faster over large datasets. Again using **microbenchmark**, if we compare the vectorised decoding of 1,000,000 URLs with `urltools` against `URLdecode` in a `vapply` loop, we see a 60-70 times speed improvement of urltools over base R:
+
+
 
 ## Summary
 

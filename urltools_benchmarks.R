@@ -22,6 +22,15 @@ example_urls <- rep("https://en.wikipedia.org/wiki/File:Vice_City_Public_Radio_%
 decoding_benchmarks <- microbenchmark({(urltools_decode(example_urls))},
                                       {(r_base_decode(example_urls))})
 
+# Reset levels
+levels(decoding_benchmarks$expr)[grepl(x = levels(decoding_benchmarks$expr), pattern = "urltools")] <- "urltools"
+levels(decoding_benchmarks$expr)[levels(decoding_benchmarks$expr) != "urltools"] <- "base R"
+
+# Plot
+ggsave(file = "decoding_benchmarks.png",
+       plot = autoplot(decoding_benchmarks) + theme_fivethirtynine(base_size = 14) +
+         labs(title = "Decoding 1m URLs, base R versus urltools (log-scaled)"))
+
 # Test parsing. Also fairly simple
 # Set up the functions:
 urltools_parse <- urltools::url_parse
@@ -29,8 +38,19 @@ httr_parse     <- function(x){
   lapply(x, httr::parse_url)
 }
 
+# Run
 parsing_benchmarks <- microbenchmark({(urltools_parse(example_urls))},
                                      {(httr_parse(example_urls))})
 
+# Reset levels
+levels(parsing_benchmarks$expr)[grepl(x = levels(parsing_benchmarks$expr), pattern = "urltools")] <- "urltools"
+levels(parsing_benchmarks$expr)[levels(parsing_benchmarks$expr) != "urltools"] <- "httr"
+
+# Plot
+ggsave(file = "parsing_benchmarks.png",
+       plot = autoplot(parsing_benchmarks) + theme_fivethirtynine(base_size = 14) +
+         labs(title = "Parsing 1m URLs, httr versus urltools (log-scaled)"))
+
 # Save the results to disc, because nobody wants to lose benchmarks that take _this long_ to compute.
 save(decoding_benchmarks, parsing_benchmarks, file = "urltools_benchmarks.RData")
+

@@ -90,6 +90,23 @@ To solve this common problem in analysing request logs, the **urltools** [@urlto
     \caption{Results of microbenchmark run: url\char`_decode versus base-R equivalent code}
 \end{figure}
 
+### Parsing
+
+The standard for URLs \citep{RFC1738} divides them into a heirarchical sequence of components - the scheme ("http"), host ("en.wikipedia.org"), port ("800"), path ("wiki/Main_Page") and searchpart, or parameters ("action=edit"). Together, these make
+up a URL ("http://en.wikipedia.org:800/wiki/Main_Page?action=edit").
+
+Parsing URLs to isolate and extract these components is a useful ability when it comes to exploring request logs; it lets a researcher pick out particular schemes, paths, hosts or other components to aggregate by, identifying how users are behaving and what they are visiting. It makes anonymising data - by removing, for example, the parameters or path, which can contain relatively unique information - easier.
+
+Base R does not have native code to parse URLs, but the **httr** package \citep{httr} contains a function, `parse_url`, designed to do just that and built on base R's capabilities. This function is neither vectorised nor based on compiled code, and produces a list, making looping over a set of URLs to parse each one a somewhat thorny experience. This is totally understandable given the intent behind that function, which is to decompose individual URLs within the context of making HTTP requests, rather than to analyse request logs *en masse*.
+
+`urltools` contains `url_parse` - which does the same thing as the equivalent `httr` functionality, but in a vectorised way, relying on compiled code, and producing a data.frame. Within the context of parsing and processing access logs, this is far more useful, because it works efficiently over large sets: httr's functionality, not having designed to be, does not. Indeed, benchmarking showed that httr's version is (for large vectors, at least) approximately 570 times slower than `url_parse`:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{decoding_benchmarks}
+    \caption{Results of microbenchmark run: url\char`_parse versus httr equivalent code}
+\end{figure}
+
 ## Summary
 
 This file is only a basic article template. For full details of _The R Journal_ style and information on how to prepare your article for submission, see the [Instructions for Authors](http://journal.r-project.org/latex/RJauthorguide.pdf).

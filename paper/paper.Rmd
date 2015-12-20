@@ -13,22 +13,28 @@ author:
     - line 1
     - line 2
     email:  author2@work
+  - name: Jay Jacobs
+    affiliation: Magical Python Land
+    address:
+    - line 1
+    - line 2
+    email:  author3@work
 abstract: >
   Web access logs contain information on HTTP(S) requests and form a key part of both industry and academic explorations
   of human behaviour on the internet - explorations commonly performed in R. In this paper we explain and demonstrate
-  a series of packages - **webreadr**, **urltools**, **iptools** and **rgeolocate** - designed to efficiently read in, parse
+  a series of packages - \CRANpkg{webreadr}, \CRANpkg{urltools}, \CRANpkg{iptools} and \CRANpkg{rgeolocate} - designed to efficiently read in, parse
   and munge access log data, allowing researchers to handle it easily.
 preamble: >
 output: rticles::rjournal_article
 ---
 ## Introduction
 
-The rise of the World Wide Web over the last few decades has made it dramatically easier to access and transfer data, and R \citep{RCore} boasts abundant functionality when it comes to taking data *from* the web. Base R itself has simple file downloading and page reading capabilities, through the `download.file` and `readLines` functions, and additional functionality is made available for handling web-accessible data through packages such as **httr** \citep{httr}.
+The rise of the World Wide Web over the last few decades has made it dramatically easier to access and transfer data, and R \citep{RCore} boasts abundant functionality when it comes to taking data *from* the web. Base R itself has simple file downloading and page reading capabilities, through the `download.file` and `readLines` functions, and additional functionality is made available for handling web-accessible data through packages such as \CRANpkg{httr} \citep{httr}.
 
 Data *on* the web is not, however, the only kind of web data that interests researchers; web traffic is, in and of itself, an interesting data source. Access logs - records of connections between users and a web server - are an asset and resource for people studying everything from user behaviour on the internet \citep{halfak}, to website performance \citep{performance}, to information security \citep{infosec}.
 
-As a statistically-oriented programming language, R is commonly used by these same researchers for data analysis, testing and reporting - but it lacks tools designed for the kinds of data sources and formats that are encountered when dealing with access logs. In this article we review the use cases for particular operations over web data, the limitations in base R when it comes to performing those operations, and a suite of R packages designed to overcome them: **webreadr** \citep{webreadr}, designed for reading access logs in,
-**urltools** \citep{urltools}, for URL manipulation, **iptools** \citep{rgeolocate} for handling IP addresses, and **rgeolocate** \citep{rgeolocate} for direct IP geolocation.
+As a statistically-oriented programming language, R is commonly used by these same researchers for data analysis, testing and reporting - but it lacks tools designed for the kinds of data sources and formats that are encountered when dealing with access logs. In this article we review the use cases for particular operations over web data, the limitations in base R when it comes to performing those operations, and a suite of R packages designed to overcome them: \CRANpkg{webreadr} \citep{webreadr}, designed for reading access logs in,
+\CRANpkg{urltools} \citep{urltools}, for URL manipulation, \CRANpkg{iptools} \citep{iptools} for handling IP addresses, and \CRANpkg{rgeolocate} \citep{rgeolocate} for direct IP geolocation.
 
 ## Reading access logs
 
@@ -53,9 +59,9 @@ AWS & 2 & 2014-05-23	01:13:11\\
 
 With four log types, we have three different timestamp formats - and that's only one of the many columns that could appear. These logs also vary in whether they specify quoting fields (or sanitising unquoted ones), the columns they contain and the data each column contains in turn.
 
-To make reading access logs into R as easy as possible we created the **webreadr** package. This contains user-friendly equivalents to `read.table` for each type of log, detecting the fields that should appear, converting the timestamps into POSIX objects, and merging fields or splitting fields where necessary. The package contains four core functions, one for each form of log: `read_clf` for the Common Log Format, `read_combined` for the Combined Log Format, and `read_squid` and `read_aws` for Squid and AWS formats respectively. Each one abstracts away the complexity of specifying column names and formats, and instead allows a researcher to read a file in with a minimal amount of work.
+To make reading access logs into R as easy as possible we created the \CRANpkg{webreadr} package. This contains user-friendly equivalents to `read.table` for each type of log, detecting the fields that should appear, converting the timestamps into POSIX objects, and merging fields or splitting fields where necessary. The package contains four core functions, one for each form of log: `read_clf` for the Common Log Format, `read_combined` for the Combined Log Format, and `read_squid` and `read_aws` for Squid and AWS formats respectively. Each one abstracts away the complexity of specifying column names and formats, and instead allows a researcher to read a file in with a minimal amount of work.
 
-As the name suggests, it is built not on top of base R but on top of the **readr** \citep{readr} package, allowing us to take advantage of substantial speed improvements that package's base functions have over base R. These improvements can be seen in the visualisation below, which uses **microbenchmark** \citep{microbenchmark} to compare 100 reads of a 600,000-line "squid" formatted file with webreadr to the same operation performed in base R: 
+As the name suggests, it is built not on top of base R but on top of the \CRANpkg{readr} \citep{readr} package, allowing us to take advantage of substantial speed improvements that package's base functions have over base R. These improvements can be seen in the visualisation below, which uses \CRANpkg{microbenchmark} \citep{microbenchmark} to compare 100 reads of a 600,000-line "squid" formatted file with webreadr to the same operation performed in base R: 
 
 \begin{figure}[h]
     \centering
@@ -81,8 +87,8 @@ in your data - but it becomes tougher if encoding is inconsistent, because two U
 
 The solution is to be able to consistently decode URLs, which makes URL-based data far easier to analyse. Base R does contain a function, <code>URLdecode</code>, for doing just that, but is neither vectorised nor based on compiled code; with large datasets it takes an extremely long time.
 
-To solve this common problem in analysing request logs, the **urltools** [@urltools] package was created. This contains a function,
-<code>url_decode</code>, which decodes URLs - but relies on vectorised, compiled code. Benchmarking the two approaches against each other shows that the `urltools` implementation is approximately 60-70 times faster over large datasets. Again using **microbenchmark**, if we compare the vectorised decoding of 1,000,000 URLs with `urltools` against `URLdecode` in a `vapply` loop, we see a 60-70 times speed improvement of urltools over base R:
+To solve this common problem in analysing request logs, the \CRANpkg{urltools} [@urltools] package was created. This contains a function,
+<code>url_decode</code>, which decodes URLs - but relies on vectorised, compiled code. Benchmarking the two approaches against each other shows that the \CRANpkg{urltools} implementation is approximately 60-70 times faster over large datasets. Again using **microbenchmark**, if we compare the vectorised decoding of 1,000,000 URLs with \CRANpkg{urltools} against `URLdecode` in a `vapply` loop, we see a 60-70 times speed improvement of urltools over base R:
 
 \begin{figure}[h]
     \centering
@@ -97,9 +103,9 @@ up a URL ("http://en.wikipedia.org:800/wiki/Main_Page?action=edit").
 
 Parsing URLs to isolate and extract these components is a useful ability when it comes to exploring request logs; it lets a researcher pick out particular schemes, paths, hosts or other components to aggregate by, identifying how users are behaving and what they are visiting. It makes anonymising data - by removing, for example, the parameters or path, which can contain relatively unique information - easier.
 
-Base R does not have native code to parse URLs, but the **httr** package \citep{httr} contains a function, `parse_url`, designed to do just thatm built on R's regular expressions. This function is not vectorised, does not make use of compiled code internally, and produces a list rather than data.frame, making looping over a set of URLs to parse each one a time-consuming and awkward experience. This is understandable given the intent behind that function, which is to decompose individual URLs within the context of making HTTP requests, rather than to analyse URLs *en masse*.
+Base R does not have native code to parse URLs, but the \CRANpkg{httr} package \citep{httr} contains a function, `parse_url`, designed to do just thatm built on R's regular expressions. This function is not vectorised, does not make use of compiled code internally, and produces a list rather than data.frame, making looping over a set of URLs to parse each one a time-consuming and awkward experience. This is understandable given the intent behind that function, which is to decompose individual URLs within the context of making HTTP requests, rather than to analyse URLs *en masse*.
 
-`urltools` contains `url_parse` - which does the same thing as the equivalent `httr` functionality, but in a vectorised way, relying on compiled code, and producing a data.frame. Within the context of parsing and processing access logs, this is far more useful, because it works efficiently over large sets: httr's functionality, not having designed to be, does not. Indeed, benchmarking showed that `url_parse` is approximately 570 times faster than httr's equivalent function:
+\CRANpkg{urltools} contains `url_parse` - which does the same thing as the equivalent `httr` functionality, but in a vectorised way, relying on compiled code, and producing a data.frame. Within the context of parsing and processing access logs, this is far more useful, because it works efficiently over large sets: httr's functionality, which was never designed with vectorisation in mind, does not. Indeed, benchmarking showed that `url_parse` is approximately 570 times faster than httr's equivalent function:
 
 \begin{figure}[h]
     \centering
@@ -125,10 +131,49 @@ scheme(url)
 scheme(url) <- "https"
 url
 ```
+
+As a result of this functionality, urltools provides a package to make URL manipulation faster, easier and far more accessible, reducing the burden associated with munging access logs or similar datasets and allowing a researcher to get to the statistical analysis faster.
+
 ## IP manipulation and geolocation
 
-## Summary
+Access logs also contain IP addresses - unique numeric values that identify a particular computer or network in the context of the internet.
 
-This file is only a basic article template. For full details of _The R Journal_ style and information on how to prepare your article for submission, see the [Instructions for Authors](http://journal.r-project.org/latex/RJauthorguide.pdf).
+<!-- Bob, I'll rely on you to fill out bits on how iptools is useful for this kind of work; I tend to primarily rely on rgeolocate since my ip-needs are more limited. --> 
+
+As a side-effect of how IP addresses tend to be assigned - in geographic blocks, to individual machines or to local networks - they can be used to geolocate requests, identifying where in the world the request came from, sometimes down to the level of individual post codes or pairs of latitude/longitude coordinates.
+
+This is tremendously useful in industry, where the geographic reach of a service has substantial implications for its viability and survivability, and in academia, where the locality of internet-provided information and the breadth of internet access are active concerns and areas of study \citep{barriers}.
+
+Many services and databases exist for extracting geographic metadata from IP addresses. One of the most common is the service provided by MaxMind, which has both proprietary and openly-licensed databases, in binary and comma-separated formats. The free databases have been used by various web APIs, which makes the data they contain accessible from R. Unfortunately, dependence on web APIs means that handling large numbers of IP addresses can be very slow (they tend to be designed to only accept one IP address at a time, and may contain throttling beyond that) and has privacy concerns, since it essentially means sending user IP addresses to a third party. And even without these issues, there are no convenient wrappers for those APIs available on CRAN: users have to hand-roll their own.
+
+With these concerns in mind, we wrote the \CRANpkg{rgeolocate} package. Through \pkg{httr} this contains convenient, vectorised bindings
+to various web services that provide geographic metadata about IP addresses. More importantly, using the \CRANpkg{Rcpp} package to integrate C++ and R, \pkg{rgeolocate} also features a direct, compiled binding to the MaxMind API. This means that local binary databases can also be queried, which is far faster and more robust than web-based equivalents and avoids the privacy concerns associated with transmitting users' IP addresses externally.
+
+The MaxMind API requires a paid or free binary database - one of which, for country-level IP resolution, is included in \pkg{rgeolocate} - and allows you to retrieve the continent, country name or ISO code, region or city name, tzdata-compatible timezone, longitude, latitude or connection type of a particular IP address. Multiple fields can be selected (although which are available depends on the type of database used), and results are returned in a data.frame:
+
+```{r, eval=TRUE}
+
+# Load rgeolocate
+library(rgeolocate)
+
+# Find the rgeolocate-provided binary database
+geo_file <- system.file("extdata","GeoLite2-Country.mmdb", package = "rgeolocate")
+
+# Put together some example IP addresses
+ip_addresses <- c("174.62.175.82", "196.200.60.51")
+
+# Geolocate
+rgeolocate::maxmind(ip_addresses, geo_file, fields = c("continent_name", "country_code"))
+
+```
+
+Direct speed comparisons aren't possible, since the functionality it provides is not (to the authors' knowledge) replicated in
+other R packages, but it is certainly faster (and more secure) than internet-dependent alternatives.
+
+## Conclusions and further work
+
+In this research article we have demonstrated a set of tools for handling access logs during every stage of the data cleaning pipeline - reading them in with \pkg{webreadr}, decoding, manipulating and extracting value from URLs with \pkg{urltools}, and retrieving geographic metadata from IP addresses with \pkg{iptools} and \pkg{rgeolocate}. We have also demonstrated the dramatic speed improvements in using these tools in preference to existing methods within R.
+
+Further work - integrating more sources of geolocation information within \pkg{rgeolocate}, supporting UTF-8 URL decoding within \pkg{urltools}, and increasing IPv6 support in \pkg{iptools} - would make these packages even more useful to Human-Computer Interaction researchers and other specialists who rely on access logs as primary data sources. Even without that functionality, however, this suite of packages is a dramatic improvement upon the status quo.
 
 \bibliography{RJreferences}

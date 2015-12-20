@@ -1,6 +1,6 @@
 % !TeX root = RJwrapper.tex
 \title{R Packages to Aid in Handling Web Access Logs}
-\author{by Oliver Keyes, Bob Rudis}
+\author{by Oliver Keyes, Bob Rudis, Jay Jacobs}
 
 \maketitle
 
@@ -8,10 +8,10 @@
 Web access logs contain information on HTTP(S) requests and form a key
 part of both industry and academic explorations of human behaviour on
 the internet - explorations commonly performed in R. In this paper we
-explain and demonstrate a series of packages - \textbf{webreadr},
-\textbf{urltools}, \textbf{iptools} and \textbf{rgeolocate} - designed
-to efficiently read in, parse and munge access log data, allowing
-researchers to handle it easily.
+explain and demonstrate a series of packages - \CRANpkg{webreadr},
+\CRANpkg{urltools}, \CRANpkg{iptools} and \CRANpkg{rgeolocate} -
+designed to efficiently read in, parse and munge access log data,
+allowing researchers to handle it easily.
 }
 
 \subsection{Introduction}\label{introduction}
@@ -22,7 +22,8 @@ boasts abundant functionality when it comes to taking data \emph{from}
 the web. Base R itself has simple file downloading and page reading
 capabilities, through the \texttt{download.file} and \texttt{readLines}
 functions, and additional functionality is made available for handling
-web-accessible data through packages such as \textbf{httr} \citep{httr}.
+web-accessible data through packages such as \CRANpkg{httr}
+\citep{httr}.
 
 Data \emph{on} the web is not, however, the only kind of web data that
 interests researchers; web traffic is, in and of itself, an interesting
@@ -38,11 +39,11 @@ lacks tools designed for the kinds of data sources and formats that are
 encountered when dealing with access logs. In this article we review the
 use cases for particular operations over web data, the limitations in
 base R when it comes to performing those operations, and a suite of R
-packages designed to overcome them: \textbf{webreadr} \citep{webreadr},
-designed for reading access logs in, \textbf{urltools} \citep{urltools},
-for URL manipulation, \textbf{iptools} \citep{rgeolocate} for handling
-IP addresses, and \textbf{rgeolocate} \citep{rgeolocate} for direct IP
-geolocation.
+packages designed to overcome them: \CRANpkg{webreadr} \citep{webreadr},
+designed for reading access logs in, \CRANpkg{urltools}
+\citep{urltools}, for URL manipulation, \CRANpkg{iptools}
+\citep{iptools} for handling IP addresses, and \CRANpkg{rgeolocate}
+\citep{rgeolocate} for direct IP geolocation.
 
 \subsection{Reading access logs}\label{reading-access-logs}
 
@@ -81,7 +82,7 @@ ones), the columns they contain and the data each column contains in
 turn.
 
 To make reading access logs into R as easy as possible we created the
-\textbf{webreadr} package. This contains user-friendly equivalents to
+\CRANpkg{webreadr} package. This contains user-friendly equivalents to
 \texttt{read.table} for each type of log, detecting the fields that
 should appear, converting the timestamps into POSIX objects, and merging
 fields or splitting fields where necessary. The package contains four
@@ -93,12 +94,12 @@ specifying column names and formats, and instead allows a researcher to
 read a file in with a minimal amount of work.
 
 As the name suggests, it is built not on top of base R but on top of the
-\textbf{readr} \citep{readr} package, allowing us to take advantage of
+\CRANpkg{readr} \citep{readr} package, allowing us to take advantage of
 substantial speed improvements that package's base functions have over
 base R. These improvements can be seen in the visualisation below, which
-uses \textbf{microbenchmark} \citep{microbenchmark} to compare 100 reads
-of a 600,000-line ``squid'' formatted file with webreadr to the same
-operation performed in base R:
+uses \CRANpkg{microbenchmark} \citep{microbenchmark} to compare 100
+reads of a 600,000-line ``squid'' formatted file with webreadr to the
+same operation performed in base R:
 
 \begin{figure}[h]
     \centering
@@ -159,14 +160,14 @@ URLdecode, for doing just that, but is neither vectorised nor based on
 compiled code; with large datasets it takes an extremely long time.
 
 To solve this common problem in analysing request logs, the
-\textbf{urltools} {[}@urltools{]} package was created. This contains a
+\CRANpkg{urltools} {[}@urltools{]} package was created. This contains a
 function, url\_decode, which decodes URLs - but relies on vectorised,
 compiled code. Benchmarking the two approaches against each other shows
-that the \texttt{urltools} implementation is approximately 60-70 times
+that the \CRANpkg{urltools} implementation is approximately 60-70 times
 faster over large datasets. Again using \textbf{microbenchmark}, if we
-compare the vectorised decoding of 1,000,000 URLs with \texttt{urltools}
-against \texttt{URLdecode} in a \texttt{vapply} loop, we see a 60-70
-times speed improvement of urltools over base R:
+compare the vectorised decoding of 1,000,000 URLs with
+\CRANpkg{urltools} against \texttt{URLdecode} in a \texttt{vapply} loop,
+we see a 60-70 times speed improvement of urltools over base R:
 
 \begin{figure}[h]
     \centering
@@ -189,7 +190,7 @@ identifying how users are behaving and what they are visiting. It makes
 anonymising data - by removing, for example, the parameters or path,
 which can contain relatively unique information - easier.
 
-Base R does not have native code to parse URLs, but the \textbf{httr}
+Base R does not have native code to parse URLs, but the \CRANpkg{httr}
 package \citep{httr} contains a function, \texttt{parse\_url}, designed
 to do just thatm built on R's regular expressions. This function is not
 vectorised, does not make use of compiled code internally, and produces
@@ -199,14 +200,14 @@ understandable given the intent behind that function, which is to
 decompose individual URLs within the context of making HTTP requests,
 rather than to analyse URLs \emph{en masse}.
 
-\texttt{urltools} contains \texttt{url\_parse} - which does the same
+\CRANpkg{urltools} contains \texttt{url\_parse} - which does the same
 thing as the equivalent \texttt{httr} functionality, but in a vectorised
 way, relying on compiled code, and producing a data.frame. Within the
 context of parsing and processing access logs, this is far more useful,
-because it works efficiently over large sets: httr's functionality, not
-having designed to be, does not. Indeed, benchmarking showed that
-\texttt{url\_parse} is approximately 570 times faster than httr's
-equivalent function:
+because it works efficiently over large sets: httr's functionality,
+which was never designed with vectorisation in mind, does not. Indeed,
+benchmarking showed that \texttt{url\_parse} is approximately 570 times
+faster than httr's equivalent function:
 
 \begin{figure}[h]
     \centering
@@ -220,13 +221,16 @@ A vector of URLs passed into \texttt{url\_parse} produces a data.frame,
 with one column for each of the IETF-supported components, and empty
 strings representing components that could not be found. Additionally,
 influenced by the style of the \emph{lubridate} package
-\citep{lubridate}, \texttt{urltools} contains functions to get or set
-\emph{individual} components:
+\citep{lubridate}, \texttt{urltools} contains functions to get or
+\emph{set} individual components:
 
 \begin{Schunk}
 \begin{Sinput}
+# Load urltools and construct a URL
 library(urltools)
 url <- "http://www.google.com/"
+
+# Get the scheme
 scheme(url)
 \end{Sinput}
 \begin{Soutput}
@@ -236,6 +240,7 @@ scheme(url)
 
 \begin{Schunk}
 \begin{Sinput}
+# Set the scheme and observe the modification to the resulting URL
 scheme(url) <- "https"
 url
 \end{Sinput}
@@ -244,8 +249,81 @@ url
 \end{Soutput}
 \end{Schunk}
 
+As a result of this functionality, urltools provides a package to make
+URL manipulation faster, easier and far more accessible, reducing the
+burden associated with munging access logs or similar datasets and
+allowing a researcher to get to the statistical analysis faster.
+
 \subsection{IP manipulation and
 geolocation}\label{ip-manipulation-and-geolocation}
+
+Access logs also contain IP addresses - unique numeric values that
+identify a particular computer or network in the context of the
+internet.
+
+As a side-effect of how IP addresses tend to be assigned - in geographic
+blocks, to individual machines or to local networks - they can be used
+to geolocate requests, identifying where in the world the request came
+from, sometimes down to the level of individual post codes or pairs of
+latitude/longitude coordinates.
+
+This is tremendously useful in industry, where the geographic reach of a
+service has substantial implications for its viability and
+survivability, and in academia, where the locality of internet-provided
+information and the breadth of internet access are active concerns and
+areas of study \citep{barriers}.
+
+Many services and databases exist for extracting geographic metadata
+from IP addresses. One of the most common is the service provided by
+MaxMind, which has both proprietary and openly-licensed databases, in
+binary and comma-separated formats. The free databases have been used by
+various web APIs, which makes the data they contain accessible from R.
+Unfortunately, dependence on web APIs means that handling large numbers
+of IP addresses can be very slow (they tend to be designed to only
+accept one IP address at a time, and may contain throttling beyond that)
+and has privacy concerns, since it essentially means sending user IP
+addresses to a third party. And even without these issues, there are no
+convenient wrappers for those APIs available on CRAN: users have to
+hand-roll their own.
+
+With these concerns in mind, we wrote the \CRANpkg{rgeolocate} package.
+Through \pkg{httr} this contains convenient, vectorised bindings to
+various web services that provide geographic metadata about IP
+addresses. More importantly, using the \CRANpkg{Rcpp} package to
+integrate C++ and R, \pkg{rgeolocate} also features a direct, compiled
+binding to the MaxMind API. This means that local binary databases can
+also be queried, which is far faster and more robust than web-based
+equivalents and avoids the privacy concerns associated with transmitting
+users' IP addresses externally.
+
+The MaxMind API requires a paid or free binary database - one of which,
+for country-level IP resolution, is included in \pkg{rgeolocate} - and
+allows you to retrieve the continent, country name or ISO code, region
+or city name, tzdata-compatible timezone, longitude, latitude or
+connection type of a particular IP address. Multiple fields can be
+selected (although which are available depends on the type of database
+used), and results are returned in a data.frame:
+
+\begin{Schunk}
+\begin{Sinput}
+# Load rgeolocate
+library(rgeolocate)
+
+# Find the rgeolocate-provided binary database
+geo_file <- system.file("extdata","GeoLite2-Country.mmdb", package = "rgeolocate")
+
+# Put together some example IP addresses
+ip_addresses <- c("174.62.175.82", "196.200.60.51")
+
+# Geolocate
+rgeolocate::maxmind(ip_addresses, geo_file, fields = c("continent_name", "country_code"))
+\end{Sinput}
+\begin{Soutput}
+#>   continent_name country_code
+#> 1  North America           US
+#> 2         Africa           ML
+\end{Soutput}
+\end{Schunk}
 
 \subsection{Summary}\label{summary}
 
@@ -270,4 +348,11 @@ Rapid7\\
 line 1\\ line 2\\
 }
 \href{mailto:author2@work}{\nolinkurl{author2@work}}
+
+\address{
+Jay Jacobs\\
+Magical Python Land\\
+line 1\\ line 2\\
+}
+\href{mailto:author3@work}{\nolinkurl{author3@work}}
 

@@ -97,15 +97,35 @@ up a URL ("http://en.wikipedia.org:800/wiki/Main_Page?action=edit").
 
 Parsing URLs to isolate and extract these components is a useful ability when it comes to exploring request logs; it lets a researcher pick out particular schemes, paths, hosts or other components to aggregate by, identifying how users are behaving and what they are visiting. It makes anonymising data - by removing, for example, the parameters or path, which can contain relatively unique information - easier.
 
-Base R does not have native code to parse URLs, but the **httr** package \citep{httr} contains a function, `parse_url`, designed to do just that and built on base R's capabilities. This function is neither vectorised nor based on compiled code, and produces a list, making looping over a set of URLs to parse each one a somewhat thorny experience. This is totally understandable given the intent behind that function, which is to decompose individual URLs within the context of making HTTP requests, rather than to analyse request logs *en masse*.
+Base R does not have native code to parse URLs, but the **httr** package \citep{httr} contains a function, `parse_url`, designed to do just thatm built on R's regular expressions. This function is not vectorised, does not make use of compiled code internally, and produces a list rather than data.frame, making looping over a set of URLs to parse each one a time-consuming and awkward experience. This is understandable given the intent behind that function, which is to decompose individual URLs within the context of making HTTP requests, rather than to analyse URLs *en masse*.
 
-`urltools` contains `url_parse` - which does the same thing as the equivalent `httr` functionality, but in a vectorised way, relying on compiled code, and producing a data.frame. Within the context of parsing and processing access logs, this is far more useful, because it works efficiently over large sets: httr's functionality, not having designed to be, does not. Indeed, benchmarking showed that httr's version is (for large vectors, at least) approximately 570 times slower than `url_parse`:
+`urltools` contains `url_parse` - which does the same thing as the equivalent `httr` functionality, but in a vectorised way, relying on compiled code, and producing a data.frame. Within the context of parsing and processing access logs, this is far more useful, because it works efficiently over large sets: httr's functionality, not having designed to be, does not. Indeed, benchmarking showed that `url_parse` is approximately 570 times faster than httr's equivalent function:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{decoding_benchmarks}
-    \caption{Results of microbenchmark run: url\char`_parse versus httr equivalent code}
+    \includegraphics[scale=0.4]{parsing_benchmarks}
+    \caption{Results of microbenchmark run: url\char`_parse versus httr's equivalent code}
 \end{figure}
+
+\newpage
+
+A vector of URLs passed into `url_parse` produces a data.frame, with one column for each of the IETF-supported components, and empty strings representing components that could not be found. Additionally, influenced by the style of the *lubridate* package \citep{lubridate}, `urltools` contains functions to get or *set* individual components:
+
+```{r, eval=TRUE}
+# Load urltools and construct a URL
+library(urltools)
+url <- "http://www.google.com/"
+
+# Get the scheme
+scheme(url)
+```
+
+```{r, eval=TRUE}
+# Set the scheme and observe the modification to the resulting URL
+scheme(url) <- "https"
+url
+```
+## IP manipulation and geolocation
 
 ## Summary
 

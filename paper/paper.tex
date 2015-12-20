@@ -191,28 +191,61 @@ which can contain relatively unique information - easier.
 
 Base R does not have native code to parse URLs, but the \textbf{httr}
 package \citep{httr} contains a function, \texttt{parse\_url}, designed
-to do just that and built on base R's capabilities. This function is
-neither vectorised nor based on compiled code, and produces a list,
-making looping over a set of URLs to parse each one a somewhat thorny
-experience. This is totally understandable given the intent behind that
-function, which is to decompose individual URLs within the context of
-making HTTP requests, rather than to analyse request logs \emph{en
-masse}.
+to do just thatm built on R's regular expressions. This function is not
+vectorised, does not make use of compiled code internally, and produces
+a list rather than data.frame, making looping over a set of URLs to
+parse each one a time-consuming and awkward experience. This is
+understandable given the intent behind that function, which is to
+decompose individual URLs within the context of making HTTP requests,
+rather than to analyse URLs \emph{en masse}.
 
 \texttt{urltools} contains \texttt{url\_parse} - which does the same
 thing as the equivalent \texttt{httr} functionality, but in a vectorised
 way, relying on compiled code, and producing a data.frame. Within the
 context of parsing and processing access logs, this is far more useful,
 because it works efficiently over large sets: httr's functionality, not
-having designed to be, does not. Indeed, benchmarking showed that httr's
-version is (for large vectors, at least) approximately 570 times slower
-than \texttt{url\_parse}:
+having designed to be, does not. Indeed, benchmarking showed that
+\texttt{url\_parse} is approximately 570 times faster than httr's
+equivalent function:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{decoding_benchmarks}
-    \caption{Results of microbenchmark run: url\char`_parse versus httr equivalent code}
+    \includegraphics[scale=0.4]{parsing_benchmarks}
+    \caption{Results of microbenchmark run: url\char`_parse versus httr's equivalent code}
 \end{figure}
+
+\newpage
+
+A vector of URLs passed into \texttt{url\_parse} produces a data.frame,
+with one column for each of the IETF-supported components, and empty
+strings representing components that could not be found. Additionally,
+influenced by the style of the \emph{lubridate} package
+\citep{lubridate}, \texttt{urltools} contains functions to get or set
+\emph{individual} components:
+
+\begin{Schunk}
+\begin{Sinput}
+library(urltools)
+url <- "http://www.google.com/"
+scheme(url)
+\end{Sinput}
+\begin{Soutput}
+#> [1] "http"
+\end{Soutput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+scheme(url) <- "https"
+url
+\end{Sinput}
+\begin{Soutput}
+#> [1] "https://www.google.com/"
+\end{Soutput}
+\end{Schunk}
+
+\subsection{IP manipulation and
+geolocation}\label{ip-manipulation-and-geolocation}
 
 \subsection{Summary}\label{summary}
 

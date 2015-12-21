@@ -36,3 +36,23 @@ ggsave(file = "./paper/reading_benchmarks.png",
 # Save benchmarks
 save(reading_benchmarks, file = "webreadr_benchmarks.RData")
 
+### Updates from Jay
+
+load(file="webreadr_benchmarks.RData")
+## reading_benchmarks
+rdcode <- as.data.frame(reading_benchmarks)
+rdcode$time.sec <- rdcode$time/1e+9
+
+gg <- ggplot(rdcode, aes(expr, time.sec)) + 
+  #geom_hline(data=mbrk.df, aes(yintercept=y), color="gray95") +
+  geom_violin(fill="steelblue", color="steelblue") +
+  scale_y_continuous("Time [seconds]", breaks=seq(1,6), limits=c(1,6), expand=c(0,0)) +
+  coord_flip() +
+  ggtitle("Reading 600k lines of access log, base R versus webreadr") +
+  theme(panel.background=element_rect(fill=NA, color="gray75"),
+        panel.grid.major=element_line(color="gray75"),
+        #panel.grid.minor=element_blank(),
+        axis.title.y=element_blank(),
+        axis.ticks=element_blank())
+gg
+ggsave(gg, file = "./paper/reading_benchmarks-jay.png")

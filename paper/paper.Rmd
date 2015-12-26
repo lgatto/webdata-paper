@@ -115,7 +115,7 @@ Base R does not have native code to parse URLs, but the \CRANpkg{httr} package \
 
 \newpage
 
-A vector of URLs passed into `url_parse` produces a data.frame, with one column for each of the IETF-supported components, and empty strings representing components that could not be found. Additionally, influenced by the style of the *lubridate* package \citep{lubridate}, `urltools` contains functions to get or *set* individual components:
+A vector of URLs passed into \code{url\_parse} produces a data.frame, with one column for each of the IETF-supported components, and empty strings representing components that could not be found. Additionally, influenced by the style of the \CRANpkg{lubridate} package \citep{lubridate}, \pkg{urltools} contains functions to get or *set* individual components:
 
 ```{r, eval=TRUE}
 # Load urltools and construct a URL
@@ -132,7 +132,7 @@ scheme(url) <- "https"
 url
 ```
 
-As a result of this functionality, urltools provides a package to make URL manipulation faster, easier and far more accessible, reducing the burden associated with munging access logs or similar datasets and allowing a researcher to get to the statistical analysis faster.
+As a result of this functionality, \pkg{urltools} makes URL manipulation faster, easier and far more accessible, reducing the burden associated with munging access logs or similar datasets and allowing a researcher to get to the statistical analysis faster.
 
 ## IP manipulation and geolocation
 
@@ -146,7 +146,7 @@ This is tremendously useful in industry, where the geographic reach of a service
 
 Many services and databases exist for extracting geographic metadata from IP addresses. One of the most common is the service provided by MaxMind, which has both proprietary and openly-licensed databases, in binary and comma-separated formats. The free databases have been used by various web APIs, which makes the data they contain accessible from R. Unfortunately, dependence on web APIs means that handling large numbers of IP addresses can be very slow (they tend to be designed to only accept one IP address at a time, and may contain throttling beyond that) and has privacy concerns, since it essentially means sending user IP addresses to a third party. And even without these issues, there are no convenient wrappers for those APIs available on CRAN: users have to hand-roll their own.
 
-With these concerns in mind, we wrote the \CRANpkg{rgeolocate} package. Through \pkg{httr} this contains convenient, vectorised bindings
+With these concerns in mind, we wrote the \pkg{rgeolocate} package. Through \pkg{httr} this contains convenient, vectorised bindings
 to various web services that provide geographic metadata about IP addresses. More importantly, using the \CRANpkg{Rcpp} package to integrate C++ and R, \pkg{rgeolocate} also features a direct, compiled binding to the MaxMind API. This means that local binary databases can also be queried, which is far faster and more robust than web-based equivalents and avoids the privacy concerns associated with transmitting users' IP addresses externally.
 
 The MaxMind API requires a paid or free binary database - one of which, for country-level IP resolution, is included in \pkg{rgeolocate} - and allows you to retrieve the continent, country name or ISO code, region or city name, tzdata-compatible timezone, longitude, latitude or connection type of a particular IP address. Multiple fields can be selected (although which are available depends on the type of database used), and results are returned in a data.frame:

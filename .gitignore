@@ -12,3 +12,10 @@
 vignettes/*.html
 vignettes/*.pdf
 .Rproj.user
+
+# LaTeX
+*.log
+*.out
+*.aux
+*.utf8.*
+*.knit.*

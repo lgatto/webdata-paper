@@ -192,8 +192,8 @@ anonymising data - by removing, for example, the parameters or path,
 which can contain relatively unique information - easier.
 
 Base R does not have native code to parse URLs, but the \CRANpkg{httr}
-package \citep{httr} contains a function, \texttt{parse\_url}, designed
-to do just thatm built on R's regular expressions. This function is not
+package \citep{httr} contains a function, \code{parse\_url}, designed to
+do just that. Built on R's regular expressions, this function is not
 vectorised, does not make use of compiled code internally, and produces
 a list rather than data.frame, making looping over a set of URLs to
 parse each one a time-consuming and awkward experience. This is
@@ -201,19 +201,19 @@ understandable given the intent behind that function, which is to
 decompose individual URLs within the context of making HTTP requests,
 rather than to analyse URLs \emph{en masse}.
 
-\CRANpkg{urltools} contains \texttt{url\_parse} - which does the same
-thing as the equivalent \texttt{httr} functionality, but in a vectorised
-way, relying on compiled code, and producing a data.frame. Within the
-context of parsing and processing access logs, this is far more useful,
-because it works efficiently over large sets: httr's functionality,
-which was never designed with vectorisation in mind, does not. Indeed,
-benchmarking showed that \texttt{url\_parse} is approximately 570 times
+\pkg{urltools} contains \code{url_parse} - which does the same thing as
+the equivalent \pkg{httr} functionality, but in a vectorised way,
+relying on compiled code, and producing a data.frame. Within the context
+of parsing and processing access logs, this is far more useful, because
+it works efficiently over large sets: httr's functionality, which was
+never designed with vectorisation in mind, does not. Indeed,
+benchmarking showed that \code{url\_parse} is approximately 570 times
 faster than httr's equivalent function:
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.4]{parsing_benchmarks}
-    \caption{Results of microbenchmark run: url\char`_parse versus httr's equivalent code}
+    \caption{Results of microbenchmark run: \code{url\_parse} versus httr's equivalent code}
 \end{figure}
 
 \newpage

@@ -138,6 +138,20 @@ As a result of this functionality, \pkg{urltools} makes URL manipulation faster,
 
 Access logs also contain IP addresses - unique numeric values that identify a particular computer or network in the context of the internet.
 
+Working with these values allows an analyst to validate their data (by checking for false or spoof addresses) and is a necessary prerequisite to the use of some IP geolocation systems (covered later) which require the numeric forms of IP addresses (\samp{3232235521}) rather than the standard \dfn{dotted-decimal} form (\samp{192.168.0.1}) found in access logs.
+
+Based around the \emph{Boost ASIO} C++ library \citep{boostcite}, \pkg{iptools} is a package designed for this kind of IP manipulation (and more). Designed around combined code, it is extremely fast (for that code that does not rely on internet connections) and boasts a range of features.
+
+One of the most crucial is \code{ip\_classify}, which, when provided with a vector of IP addresses, identifies whether they follow the IPv4 or IPv6 standard. As a side-effect of this, it can be used to identify if IP addresses are invalid, or spoofed, prior to further work based on the assumption that they are correct:
+
+```{r, eval=TRUE}
+# Load iptools and construct a vector of IPs
+library(iptools)
+ip_addresses <- c("192.168.0.1", "2607:f8b0:4006:80b::1004", "Chewie")
+ip_classify(ip_addresses)
+
+```
+
 <!-- Bob, I'll rely on you to fill out bits on how iptools is useful for this kind of work; I tend to primarily rely on rgeolocate since my ip-needs are more limited. --> 
 
 As a side-effect of how IP addresses tend to be assigned - in geographic blocks, to individual machines or to local networks - they can be used to geolocate requests, identifying where in the world the request came from, sometimes down to the level of individual post codes or pairs of latitude/longitude coordinates.

@@ -201,7 +201,7 @@ understandable given the intent behind that function, which is to
 decompose individual URLs within the context of making HTTP requests,
 rather than to analyse URLs \emph{en masse}.
 
-\pkg{urltools} contains \code{url_parse} - which does the same thing as
+\pkg{urltools} contains \code{url\_parse} - which does the same thing as
 the equivalent \pkg{httr} functionality, but in a vectorised way,
 relying on compiled code, and producing a data.frame. Within the context
 of parsing and processing access logs, this is far more useful, because
@@ -218,11 +218,11 @@ faster than httr's equivalent function:
 
 \newpage
 
-A vector of URLs passed into \texttt{url\_parse} produces a data.frame,
+A vector of URLs passed into \code{url\_parse} produces a data.frame,
 with one column for each of the IETF-supported components, and empty
 strings representing components that could not be found. Additionally,
-influenced by the style of the \emph{lubridate} package
-\citep{lubridate}, \texttt{urltools} contains functions to get or
+influenced by the style of the \CRANpkg{lubridate} package
+\citep{lubridate}, \pkg{urltools} contains functions to get or
 \emph{set} individual components:
 
 \begin{Schunk}
@@ -250,10 +250,10 @@ url
 \end{Soutput}
 \end{Schunk}
 
-As a result of this functionality, urltools provides a package to make
-URL manipulation faster, easier and far more accessible, reducing the
-burden associated with munging access logs or similar datasets and
-allowing a researcher to get to the statistical analysis faster.
+As a result of this functionality, \pkg{urltools} makes URL manipulation
+faster, easier and far more accessible, reducing the burden associated
+with munging access logs or similar datasets and allowing a researcher
+to get to the statistical analysis faster.
 
 \subsection{IP manipulation and
 geolocation}\label{ip-manipulation-and-geolocation}
@@ -287,7 +287,7 @@ addresses to a third party. And even without these issues, there are no
 convenient wrappers for those APIs available on CRAN: users have to
 hand-roll their own.
 
-With these concerns in mind, we wrote the \CRANpkg{rgeolocate} package.
+With these concerns in mind, we wrote the \pkg{rgeolocate} package.
 Through \pkg{httr} this contains convenient, vectorised bindings to
 various web services that provide geographic metadata about IP
 addresses. More importantly, using the \CRANpkg{Rcpp} package to

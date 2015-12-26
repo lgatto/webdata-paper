@@ -22,7 +22,7 @@ author:
 abstract: >
   Web access logs contain information on HTTP(S) requests and form a key part of both industry and academic explorations
   of human behaviour on the internet - explorations commonly performed in R. In this paper we explain and demonstrate
-  a series of packages - \CRANpkg{webreadr}, \CRANpkg{urltools}, \CRANpkg{iptools} and \CRANpkg{rgeolocate} - designed to efficiently read in, parse
+  a series of packages designed to efficiently read in, parse
   and munge access log data, allowing researchers to handle it easily.
 preamble: >
 output: rticles::rjournal_article
@@ -59,7 +59,7 @@ AWS & 2 & 2014-05-23	01:13:11\\
 
 With four log types, we have three different timestamp formats - and that's only one of the many columns that could appear. These logs also vary in whether they specify quoting fields (or sanitising unquoted ones), the columns they contain and the data each column contains in turn.
 
-To make reading access logs into R as easy as possible we created the \CRANpkg{webreadr} package. This contains user-friendly equivalents to `read.table` for each type of log, detecting the fields that should appear, converting the timestamps into POSIX objects, and merging fields or splitting fields where necessary. The package contains four core functions, one for each form of log: `read_clf` for the Common Log Format, `read_combined` for the Combined Log Format, and `read_squid` and `read_aws` for Squid and AWS formats respectively. Each one abstracts away the complexity of specifying column names and formats, and instead allows a researcher to read a file in with a minimal amount of work.
+To make reading access logs into R as easy as possible we created the \pkg{webreadr} package. This contains user-friendly equivalents to \code{read.table} for each type of log, detecting the fields that should appear, converting the timestamps into POSIX objects, and merging fields or splitting fields where necessary. The package contains four core functions, one for each form of log: \code{read\_clf} for the Common Log Format, \code{read\_combined} for the Combined Log Format, and \code{read\_squid} and \code{read\_aws} for Squid and AWS formats respectively. Each one abstracts away the complexity of specifying column names and formats, and instead allows a researcher to read a file in with a minimal amount of work.
 
 As the name suggests, it is built not on top of base R but on top of the \CRANpkg{readr} \citep{readr} package, allowing us to take advantage of substantial speed improvements that package's base functions have over base R. These improvements can be seen in the visualisation below, which uses \CRANpkg{microbenchmark} \citep{microbenchmark} to compare 100 reads of a 600,000-line "squid" formatted file with webreadr to the same operation performed in base R: 
 
@@ -69,14 +69,14 @@ As the name suggests, it is built not on top of base R but on top of the \CRANpk
     \caption{Results of microbenchmark run: read\char`_squid versus base-R equivalent code}
 \end{figure}
   
-**webreadr** takes 1.2 seconds to read this file in at a minimum, and 1.48 at maximum, with a median of 1.33. This is consistently 3.5-6 times faster than the equivalent base R functionality - and is also, as explained, far easier to use.
+\pkg{webreadr} takes 1.2 seconds to read this file in at a minimum, and 1.48 at maximum, with a median of 1.33. This is consistently 3.5-6 times faster than the equivalent base R functionality - and is also, as explained, far easier to use.
 
 ## Decoding and parsing URLs
 
 Within access logs, URLs appear - both to describe the web asset or page that the user requested and where the user came from. These fields are usually named <code>url</code> and <code>referer</code> respectively.
 
 ### Decoding
-Both values can be percent-encoded, allowing them toinclude characters that are valid but reserved by the URL specification as having special meanings ("reserved characters"). A `#` symbol, for example, is encoded as <code>%23</code>: a percentage symbol, followed by the byte-code for that character.
+Both values can be percent-encoded, allowing them toinclude characters that are valid but reserved by the URL specification as having special meanings ("reserved characters"). A \samp{\#} symbol, for example, is encoded as \samp{\%23}: a percentage symbol, followed by the byte-code for that character.
 
 The encoding of reserved characters is useful, since it means that URL paths and queries can contain a vast array of values - but it makes data analysis tougher to do. Examples of common data analysis or cleaning operations that become more difficult are:
 
@@ -85,15 +85,15 @@ in your data - but it becomes tougher if encoding is inconsistent, because two U
 2. **Value selection**. With text-based data, regular expressions are a common way of filtering or selecting entries that meet particular conditions, but things become fuzzy when you have to look not just for particular characters (a space, say) but also the encoded values (<code>%20</code>).
 3. **Exploratory data analysis** (EDA). EDA is a common initial step to investigate a data set, examining the variables and values it contains and whether they meet a researcher's expectations - but on a practical basis it becomes difficult when the values aren't human-readable.
 
-The solution is to be able to consistently decode URLs, which makes URL-based data far easier to analyse. Base R does contain a function, <code>URLdecode</code>, for doing just that, but is neither vectorised nor based on compiled code; with large datasets it takes an extremely long time.
+The solution is to be able to consistently decode URLs, which makes URL-based data far easier to analyse. Base R does contain a function, \code{URLdecode}, for doing just that, but is neither vectorised nor based on compiled code; with large datasets it takes an extremely long time.
 
-To solve this common problem in analysing request logs, the \CRANpkg{urltools} [@urltools] package was created. This contains a function,
-<code>url_decode</code>, which decodes URLs - but relies on vectorised, compiled code. Benchmarking the two approaches against each other shows that the \CRANpkg{urltools} implementation is approximately 60-70 times faster over large datasets. Again using **microbenchmark**, if we compare the vectorised decoding of 1,000,000 URLs with \CRANpkg{urltools} against `URLdecode` in a `vapply` loop, we see a 60-70 times speed improvement of urltools over base R:
+To solve this common problem in analysing request logs, the \pkg{urltools} package was created. This contains a function,
+\code{url\_decode}, which decodes URLs - but relies on vectorised, compiled code. Benchmarking the two approaches against each other shows that the \pkg{urltools} implementation is approximately 60-70 times faster over large datasets. Again using \pkg{microbenchmark}, if we compare the vectorised decoding of 1,000,000 URLs with \pkg{urltools} against \code{URLdecode} in a \code{vapply} loop, we see a 60-70 times speed improvement:
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.4]{decoding_benchmarks}
-    \caption{Results of microbenchmark run: url\char`_decode versus base-R equivalent code}
+    \caption{Results of microbenchmark run: \code{url\_decode} versus base-R equivalent code}
 \end{figure}
 
 ### Parsing

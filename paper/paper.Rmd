@@ -98,8 +98,8 @@ To solve this common problem in analysing request logs, the \pkg{urltools} packa
 
 ### Parsing
 
-The standard for URLs \citep{RFC1738} divides them into a heirarchical sequence of components - the scheme ("http"), host ("en.wikipedia.org"), port ("800"), path ("wiki/Main_Page") and searchpart, or parameters ("action=edit"). Together, these make
-up a URL ("http://en.wikipedia.org:800/wiki/Main_Page?action=edit").
+The standard for URLs \citep{RFC1738} divides them into a heirarchical sequence of components - the scheme (\samp{http}), host (\samp{en.wikipedia.org}), port (\samp{800}), path (\samp{wiki/Main\_Page}) and searchpart, or parameters (\samp{action=edit}). Together, these make up a URL
+\linebreak (\samp{http://en.wikipedia.org:800/wiki/Main\_Page?action=edit}).
 
 Parsing URLs to isolate and extract these components is a useful ability when it comes to exploring request logs; it lets a researcher pick out particular schemes, paths, hosts or other components to aggregate by, identifying how users are behaving and what they are visiting. It makes anonymising data - by removing, for example, the parameters or path, which can contain relatively unique information - easier.
 

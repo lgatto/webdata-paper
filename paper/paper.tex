@@ -255,25 +255,20 @@ faster, easier and far more accessible, reducing the burden associated
 with munging access logs or similar datasets and allowing a researcher
 to get to the statistical analysis faster.
 
-\subsection{IP manipulation and
-geolocation}\label{ip-manipulation-and-geolocation}
+\subsection{IP manipulation}\label{ip-manipulation}
 
 Access logs also contain IP addresses - unique numeric values that
 identify a particular computer or network in the context of the
-internet.
-
-Working with these values allows an analyst to validate their data (by
-checking for false or spoof addresses) and is a necessary prerequisite
-to the use of some IP geolocation systems (covered later) which require
-the numeric forms of IP addresses (\samp{3232235521}) rather than the
-standard \dfn{dotted-decimal} form (\samp{192.168.0.1}) found in access
-logs.
+internet. Working with these values allows an analyst to validate their
+data (by checking for false or spoof addresses) and is a necessary
+prerequisite to the use of some IP geolocation systems (covered later),
+and extract a limited amount of metadata from the values themselves.
 
 Based around the \emph{Boost ASIO} C++ library \citep{boostcite},
 \pkg{iptools} is a package designed for this kind of IP manipulation
-(and more). Designed around combined code, it is extremely fast (for
-that code that does not rely on internet connections) and boasts a range
-of features.
+(and more). Built around combined code, it is extremely fast (for that
+code that does not rely on internet connections) and boasts a range of
+features.
 
 One of the most crucial is \code{ip\_classify}, which, when provided
 with a vector of IP addresses, identifies whether they follow the IPv4
@@ -292,6 +287,62 @@ ip_classify(ip_addresses)
 #> [1] "IPv4"    "IPv6"    "Invalid"
 \end{Soutput}
 \end{Schunk}
+
+\pkg{iptools} also contains (for the same purpose) code to identify the
+actual client's IP address. Access requests usually contain not only an
+IP address but a \dfn{X-Forwarded-For} field - a field identifying which
+\emph{other} IP addresses the request passed through, if the user who
+made the request is using some kind of proxy. If a user \emph{has} used
+a proxy, the contents of the IP address field won't actually be them -
+it will be the last proxy the request went through before getting to the
+server logging the requests. The actual IP address of the user will
+instead be the earliest value of the X-Forwarded-For field.
+
+The solution is to be able to identify the `real' IP address, by
+checking:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Whether the X-Forwarded-For field contains any values;
+\item
+  Extracting the earliest non-invalid IP address in that field's values
+  if so, and the contents of the IP address field if not.
+\end{enumerate}
+
+With the \code{xff\_extract} function, you can do just that:
+
+\begin{Schunk}
+\begin{Sinput}
+ip_address <- "192.168.0.1"
+x_forwarded_for <- "foo, 193.168.0.1, 230.98.107.1"
+xff_extract(ip_address, x_forwarded_for)
+\end{Sinput}
+\begin{Soutput}
+#> [1] "192.168.0.1"
+\end{Soutput}
+\end{Schunk}
+
+This returns the IP address field value if X-Forwarded-For is empty, and
+otherwise splits the X-Forwarded-For field and returns the earliest
+valid IP address. It is fully vectorised and highly useful for analysis
+predicated on IP addresses being valid, such as geolocation - without
+this kind of resolution, what you're actually geolocating might be your
+own servers.
+
+Other operations supported by \pkg{iptools} include the conversion of IP
+addresses from their standard \dfn{dotted-decimal} form to a numeric
+form, the extraction of IP ranges (and their contents), resolving IP
+addresses to hostnames, and a series of datasets covering the IPv4
+registry and port database.
+
+The limitation of the package is that it does not yet work on Windows -
+building ASIO on that platform is a uniquely frustrating experience -
+and that some operations do not yet support IPv6 (since they require the
+storage of numbers bigger than R can currently handle).
+
+\subsection{Geolocation}\label{geolocation}
 
 As a side-effect of how IP addresses tend to be assigned - in geographic
 blocks, to individual machines or to local networks - they can be used

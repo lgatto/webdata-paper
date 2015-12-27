@@ -4,9 +4,9 @@ author:
   - name: Oliver Keyes
     affiliation: Wikimedia Foundation
     address:
-    - line 1
-    - line 2
-    email:  author1@work
+    - 149 New Montgomery Street, 6th floor
+    - San Francisco, CA, 94105, USA
+    email:  ironholds@gmail.com
   - name: Bob Rudis
     affiliation: Rapid7
     address:

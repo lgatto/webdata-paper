@@ -19,7 +19,7 @@ The rise of the World Wide Web over the last few decades has made it
 dramatically easier to access and transfer data, and R \citep{RCore}
 boasts abundant functionality when it comes to taking data \emph{from}
 the web. Base R itself has simple file downloading and page reading
-capabilities, through the \texttt{download.file} and \texttt{readLines}
+capabilities, through the \code{download.file} and \code{readLines}
 functions, and additional functionality is made available for handling
 web-accessible data through packages such as \CRANpkg{httr}
 \citep{httr}.
@@ -38,11 +38,8 @@ lacks tools designed for the kinds of data sources and formats that are
 encountered when dealing with access logs. In this article we review the
 use cases for particular operations over web data, the limitations in
 base R when it comes to performing those operations, and a suite of R
-packages designed to overcome them: \CRANpkg{webreadr} \citep{webreadr},
-designed for reading access logs in, \CRANpkg{urltools}
-\citep{urltools}, for URL manipulation, \CRANpkg{iptools}
-\citep{iptools} for handling IP addresses, and \CRANpkg{rgeolocate}
-\citep{rgeolocate} for direct IP geolocation.
+packages designed to overcome them: reading access logs in, manipulating
+URLs, manipulating IP addresses, and direct IP geolocation.
 
 \subsection{Reading access logs}\label{reading-access-logs}
 
@@ -81,16 +78,16 @@ ones), the columns they contain and the data each column contains in
 turn.
 
 To make reading access logs into R as easy as possible we created the
-\pkg{webreadr} package. This contains user-friendly equivalents to
-\code{read.table} for each type of log, detecting the fields that should
-appear, converting the timestamps into POSIX objects, and merging fields
-or splitting fields where necessary. The package contains four core
-functions, one for each form of log: \code{read\_clf} for the Common Log
-Format, \code{read\_combined} for the Combined Log Format, and
-\code{read\_squid} and \code{read\_aws} for Squid and AWS formats
-respectively. Each one abstracts away the complexity of specifying
-column names and formats, and instead allows a researcher to read a file
-in with a minimal amount of work.
+\CRANpkg{webreadr} \citep{webreadr} package. This contains user-friendly
+equivalents to \code{read.table} for each type of log, detecting the
+fields that should appear, converting the timestamps into POSIX objects,
+and merging fields or splitting fields where necessary. The package
+contains four core functions, one for each form of log: \code{read\_clf}
+for the Common Log Format, \code{read\_combined} for the Combined Log
+Format, and \code{read\_squid} and \code{read\_aws} for Squid and AWS
+formats respectively. Each one abstracts away the complexity of
+specifying column names and formats, and instead allows a researcher to
+read a file in with a minimal amount of work.
 
 As the name suggests, it is built not on top of base R but on top of the
 \CRANpkg{readr} \citep{readr} package, allowing us to take advantage of
@@ -159,15 +156,15 @@ URL-based data far easier to analyse. Base R does contain a function,
 based on compiled code; with large datasets it takes an extremely long
 time.
 
-To solve this common problem in analysing request logs, the
-\pkg{urltools} package was created. This contains a function,
-\code{url\_decode}, which decodes URLs - but relies on vectorised,
-compiled code. Benchmarking the two approaches against each other shows
-that the \pkg{urltools} implementation is approximately 60-70 times
-faster over large datasets. Again using \pkg{microbenchmark}, if we
-compare the vectorised decoding of 1,000,000 URLs with \pkg{urltools}
-against \code{URLdecode} in a \code{vapply} loop, we see a 60-70 times
-speed improvement:
+To solve this common problem in analysing request logs,
+the\CRANpkg{urltools} \citep{urltools} package was created. This
+contains a function, \code{url\_decode}, which decodes URLs and relies
+on vectorised, compiled code to do so. Benchmarking the two approaches
+against each other shows that the \pkg{urltools} implementation is
+approximately 60-70 times faster over large datasets. Again using
+\pkg{microbenchmark}, if we compare the vectorised decoding of 1,000,000
+URLs with \pkg{urltools} against \code{URLdecode} in a \code{vapply}
+loop, we see a 60-70 times speed improvement:
 
 \begin{figure}[h]
     \centering
@@ -265,10 +262,10 @@ prerequisite to the use of some IP geolocation systems (covered later),
 and extract a limited amount of metadata from the values themselves.
 
 Based around the \emph{Boost ASIO} C++ library \citep{boostcite},
-\pkg{iptools} is a package designed for this kind of IP manipulation
-(and more). Built around combined code, it is extremely fast (for that
-code that does not rely on internet connections) and boasts a range of
-features.
+\CRANpkg{iptools} \citep{iptools} is a package designed for this kind of
+IP manipulation (and more). Built around combined code, it is extremely
+fast (for that code that does not rely on internet connections) and
+boasts a range of features.
 
 One of the most crucial is \code{ip\_classify}, which, when provided
 with a vector of IP addresses, identifies whether they follow the IPv4
@@ -369,15 +366,15 @@ addresses to a third party. And even without these issues, there are no
 convenient wrappers for those APIs available on CRAN: users have to
 hand-roll their own.
 
-With these concerns in mind, we wrote the \pkg{rgeolocate} package.
-Through \pkg{httr} this contains convenient, vectorised bindings to
-various web services that provide geographic metadata about IP
-addresses. More importantly, using the \CRANpkg{Rcpp} package to
-integrate C++ and R, \pkg{rgeolocate} also features a direct, compiled
-binding to the MaxMind API. This means that local binary databases can
-also be queried, which is far faster and more robust than web-based
-equivalents and avoids the privacy concerns associated with transmitting
-users' IP addresses externally.
+With these concerns in mind, we wrote the \CRANpkg{rgeolocate}
+\citep{rgeolocate} package. Through \pkg{httr} this contains convenient,
+vectorised bindings to various web services that provide geographic
+metadata about IP addresses. More importantly, using the \CRANpkg{Rcpp}
+package to integrate C++ and R, \pkg{rgeolocate} also features a direct,
+compiled binding to the MaxMind API. This means that local binary
+databases can also be queried, which is far faster and more robust than
+web-based equivalents and avoids the privacy concerns associated with
+transmitting users' IP addresses externally.
 
 The MaxMind API requires a paid or free binary database - one of which,
 for country-level IP resolution, is included in \pkg{rgeolocate} - and

@@ -4,7 +4,7 @@
 
 \maketitle
 
-\abstract{
+\abstract{%
 Web access logs contain information on HTTP(S) requests and form a key
 part of both industry and academic explorations of human behaviour on
 the internet - explorations commonly performed in R. In this paper we
@@ -99,7 +99,7 @@ same operation performed in base R:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{reading_benchmarks}
+    \includegraphics[width=14cm,keepaspectratio]{reading_benchmarks-jay}
     \caption{Results of microbenchmark run: read\char`_squid versus base-R equivalent code}
 \end{figure}
 
@@ -129,7 +129,7 @@ operations that become more difficult are:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\itemsep1pt\parskip0pt\parsep0pt
+\tightlist
 \item
   \textbf{Aggregation}. Aggregating URLs together is useful to identify,
   for example, the relative usage and popularity of particular pages in
@@ -168,7 +168,7 @@ loop, we see a 60-70 times speed improvement:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{decoding_benchmarks}
+    \includegraphics[width=14cm,keepaspectratio]{decoding_benchmarks-jay}
     \caption{Results of microbenchmark run: \code{url\_decode} versus base-R equivalent code}
 \end{figure}
 
@@ -209,7 +209,7 @@ faster than httr's equivalent function:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{parsing_benchmarks}
+    \includegraphics[width=14cm,keepaspectratio]{parsing_benchmarks-jay}
     \caption{Results of microbenchmark run: \code{url\_parse} versus httr's equivalent code}
 \end{figure}
 
@@ -307,7 +307,7 @@ checking:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\itemsep1pt\parskip0pt\parsep0pt
+\tightlist
 \item
   Whether the X-Forwarded-For field contains any values;
 \item
@@ -438,24 +438,24 @@ packages is a dramatic improvement upon the status quo.
 
 \bibliography{RJreferences}
 
-\address{
+\address{%
 Oliver Keyes\\
 Wikimedia Foundation\\
 149 New Montgomery Street, 6th floor\\ San Francisco, CA, 94105, USA\\
 }
 \href{mailto:ironholds@gmail.com}{\nolinkurl{ironholds@gmail.com}}
 
-\address{
+\address{%
 Bob Rudis\\
 Rapid7\\
 line 1\\ line 2\\
 }
 \href{mailto:author2@work}{\nolinkurl{author2@work}}
 
-\address{
+\address{%
 Jay Jacobs\\
-Magical Python Land\\
+BitSight\\
 line 1\\ line 2\\
 }
-\href{mailto:author3@work}{\nolinkurl{author3@work}}
+\href{mailto:jjacobs@bitsighttech.com}{\nolinkurl{jjacobs@bitsighttech.com}}
 

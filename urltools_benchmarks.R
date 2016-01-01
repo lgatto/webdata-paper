@@ -73,8 +73,9 @@ gg <- ggplot(dcode, aes(expr, time.sec)) +
         panel.grid.major=element_line(color="gray75"),
         panel.grid.minor=element_blank(),
         axis.title.y=element_blank(),
-        axis.ticks=element_blank())
-ggsave(gg, file = "./paper/decoding_benchmarks-jay.png")
+        axis.ticks=element_blank(),
+        title=element_text(size=10))
+ggsave(gg, file = "./paper/decoding_benchmarks-jay.png", width=7, height=3)
        
 
 ## parsing_benchmarks
@@ -94,6 +95,7 @@ gg <- ggplot(pcode, aes(expr, time.sec)) +
         panel.grid.major=element_line(color="gray75"),
         panel.grid.minor=element_blank(),
         axis.title.y=element_blank(),
-        axis.ticks=element_blank())
+        axis.ticks=element_blank(),
+        title=element_text(size=10))
 gg
-ggsave(gg, file = "./paper/parsing_benchmarks-jay.png")
+ggsave(gg, file = "./paper/parsing_benchmarks-jay.png", width=7, height=3)

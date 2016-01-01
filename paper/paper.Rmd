@@ -14,11 +14,10 @@ author:
     - line 2
     email:  author2@work
   - name: Jay Jacobs
-    affiliation: Magical Python Land
+    affiliation: BitSight
     address:
-    - line 1
-    - line 2
-    email:  author3@work
+    - Boston, MA
+    email:  jay@beechplane.com
 abstract: >
   Web access logs contain information on HTTP(S) requests and form a key part of both industry and academic explorations
   of human behaviour on the internet - explorations commonly performed in R. In this paper we explain and demonstrate
@@ -64,7 +63,7 @@ As the name suggests, it is built not on top of base R but on top of the \CRANpk
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{reading_benchmarks}
+    \includegraphics[width=14cm,keepaspectratio]{reading_benchmarks-jay}
     \caption{Results of microbenchmark run: read\char`_squid versus base-R equivalent code}
 \end{figure}
   
@@ -91,7 +90,7 @@ To solve this common problem in analysing request logs, the\CRANpkg{urltools} \c
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{decoding_benchmarks}
+    \includegraphics[width=14cm,keepaspectratio]{decoding_benchmarks-jay}
     \caption{Results of microbenchmark run: \code{url\_decode} versus base-R equivalent code}
 \end{figure}
 
@@ -108,7 +107,7 @@ Base R does not have native code to parse URLs, but the \CRANpkg{httr} package \
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{parsing_benchmarks}
+    \includegraphics[width=14cm,keepaspectratio]{parsing_benchmarks-jay}
     \caption{Results of microbenchmark run: \code{url\_parse} versus httr's equivalent code}
 \end{figure}
 

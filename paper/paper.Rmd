@@ -149,7 +149,9 @@ ip_classify(ip_addresses)
 
 ```
 
-\pkg{iptools} also contains (for the same purpose) code to identify the actual client's IP address. Access requests usually contain not only an IP address but a \dfn{X-Forwarded-For} field - a field identifying which \emph{other} IP addresses the request passed through, if the user who made the request is using some kind of proxy. If a user \emph{has} used a proxy, the contents of the IP address field won't actually be them - it will be the last proxy the request went through before getting to the server logging the requests. The actual IP address of the user will instead be the earliest value of the X-Forwarded-For field.
+Along with this general tool there are also functions for ascertaining specific facts about IP addresses, returning logical (\code{TRUE} or \code{FALSE}) values. These are \code{is\_valid}, \code{is\_ipv4}, \code{is\_ipv6}, which are built on top of \code{ip\_classify}, and \code{is\_multicast}, which identifies if an IP address is \dfn{multicast} - designed to point to multiple machines.
+
+\pkg{iptools} also contains (for similar purposes) code to identify the actual client's IP address. Access requests usually contain not only an IP address but a \dfn{X-Forwarded-For} field - a field identifying which \emph{other} IP addresses the request passed through, if the user who made the request is using some kind of proxy. If a user \emph{has} used a proxy, the contents of the IP address field won't actually be them - it will be the last proxy the request went through before getting to the server logging the requests. The actual IP address of the user will instead be the earliest value of the X-Forwarded-For field.
 
 The solution is to be able to identify the 'real' IP address, by checking:
 
@@ -168,7 +170,7 @@ This returns the IP address field value if X-Forwarded-For is empty, and otherwi
 
 Other operations supported by \pkg{iptools} include the conversion of IP addresses from their standard \dfn{dotted-decimal} form to a numeric form, the extraction of IP ranges (and their contents), resolving IP addresses to hostnames, and a series of datasets covering the IPv4 registry and port database.
 
-The limitation of the package is that it does not yet work on Windows - building ASIO on that platform is a uniquely frustrating experience - and that some operations do not yet support IPv6 (since they require the storage of numbers bigger than R can currently handle).
+The limitation of the package is that it some operations do not yet support IPv6 (since they require the storage of numbers bigger than R can currently handle).
 
 ## Geolocation
 As a side-effect of how IP addresses tend to be assigned - in geographic blocks, to individual machines or to local networks - they can be used to geolocate requests, identifying where in the world the request came from, sometimes down to the level of individual post codes or pairs of latitude/longitude coordinates.

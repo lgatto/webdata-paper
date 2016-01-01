@@ -4,7 +4,7 @@
 
 \maketitle
 
-\abstract{%
+\abstract{
 Web access logs contain information on HTTP(S) requests and form a key
 part of both industry and academic explorations of human behaviour on
 the internet - explorations commonly performed in R. In this paper we
@@ -285,7 +285,14 @@ ip_classify(ip_addresses)
 \end{Soutput}
 \end{Schunk}
 
-\pkg{iptools} also contains (for the same purpose) code to identify the
+Along with this general tool there are also functions for ascertaining
+specific facts about IP addresses, returning logical (\code{TRUE} or
+\code{FALSE}) values. These are \code{is\_valid}, \code{is\_ipv4},
+\code{is\_ipv6}, which are built on top of \code{ip\_classify}, and
+\code{is\_multicast}, which identifies if an IP address is
+\dfn{multicast} - designed to point to multiple machines.
+
+\pkg{iptools} also contains (for similar purposes) code to identify the
 actual client's IP address. Access requests usually contain not only an
 IP address but a \dfn{X-Forwarded-For} field - a field identifying which
 \emph{other} IP addresses the request passed through, if the user who
@@ -334,10 +341,9 @@ form, the extraction of IP ranges (and their contents), resolving IP
 addresses to hostnames, and a series of datasets covering the IPv4
 registry and port database.
 
-The limitation of the package is that it does not yet work on Windows -
-building ASIO on that platform is a uniquely frustrating experience -
-and that some operations do not yet support IPv6 (since they require the
-storage of numbers bigger than R can currently handle).
+The limitation of the package is that it some operations do not yet
+support IPv6 (since they require the storage of numbers bigger than R
+can currently handle).
 
 \subsection{Geolocation}\label{geolocation}
 
@@ -432,21 +438,21 @@ packages is a dramatic improvement upon the status quo.
 
 \bibliography{RJreferences}
 
-\address{%
+\address{
 Oliver Keyes\\
 Wikimedia Foundation\\
 149 New Montgomery Street, 6th floor\\ San Francisco, CA, 94105, USA\\
 }
 \href{mailto:ironholds@gmail.com}{\nolinkurl{ironholds@gmail.com}}
 
-\address{%
+\address{
 Bob Rudis\\
 Rapid7\\
 line 1\\ line 2\\
 }
 \href{mailto:author2@work}{\nolinkurl{author2@work}}
 
-\address{%
+\address{
 Jay Jacobs\\
 Magical Python Land\\
 line 1\\ line 2\\

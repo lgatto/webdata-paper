@@ -169,7 +169,7 @@ This returns the IP address field value if X-Forwarded-For is empty, and otherwi
 
 Other operations supported by \pkg{iptools} include the conversion of IP addresses from their standard \dfn{dotted-decimal} form to a numeric form, the extraction of IP ranges (and their contents), resolving IP addresses to hostnames, and a series of datasets covering the IPv4 registry and port database.
 
-The limitation of the package is that it some operations do not yet support IPv6 (since they require the storage of numbers bigger than R can currently handle).
+The limitation of the package is that some operations do not yet support IPv6 (since they require the storage of numbers bigger than R can currently handle).
 
 ## Geolocation
 As a side-effect of how IP addresses tend to be assigned - in geographic blocks, to individual machines or to local networks - they can be used to geolocate requests, identifying where in the world the request came from, sometimes down to the level of individual post codes or pairs of latitude/longitude coordinates.

@@ -74,7 +74,7 @@ As the name suggests, it is built not on top of base R but on top of the \CRANpk
 Within access logs, URLs appear - both to describe the web asset or page that the user requested and where the user came from. These fields are usually named <code>url</code> and <code>referer</code> respectively.
 
 ### Decoding
-Both values can be percent-encoded, allowing them toinclude characters that are valid but reserved by the URL specification as having special meanings ("reserved characters"). A \samp{\#} symbol, for example, is encoded as \samp{\%23}: a percentage symbol, followed by the byte-code for that character.
+Both values can be percent-encoded, allowing them to include characters that are valid but reserved by the URL specification as having special meanings ("reserved characters"). A \samp{\#} symbol, for example, is encoded as \samp{\%23}: a percentage symbol, followed by the byte-code for that character.
 
 The encoding of reserved characters is useful, since it means that URL paths and queries can contain a vast array of values - but it makes data analysis tougher to do. Examples of common data analysis or cleaning operations that become more difficult are:
 

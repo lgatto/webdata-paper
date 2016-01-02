@@ -85,7 +85,7 @@ in your data - but it becomes tougher if encoding is inconsistent, because two U
 
 The solution is to be able to consistently decode URLs, which makes URL-based data far easier to analyse. Base R does contain a function, \code{URLdecode}, for doing just that, but is neither vectorised nor based on compiled code; with large datasets it takes an extremely long time.
 
-To solve this common problem in analysing request logs, the\CRANpkg{urltools} \citep{urltools} package was created. This contains a function,
+To solve this common problem in analysing request logs, the \CRANpkg{urltools} \citep{urltools} package was created. This contains a function,
 \code{url\_decode}, which decodes URLs and relies on vectorised, compiled code to do so. Benchmarking the two approaches against each other shows that the \pkg{urltools} implementation is approximately 60-70 times faster over large datasets. Again using \pkg{microbenchmark}, if we compare the vectorised decoding of 1,000,000 URLs with \pkg{urltools} against \code{URLdecode} in a \code{vapply} loop, we see a 60-70 times speed improvement:
 
 \begin{figure}[h]
